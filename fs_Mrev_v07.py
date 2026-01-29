@@ -19,6 +19,26 @@ def get_dayprices_date(stock_, num_inter):
         print("no data available")
     return(dates_exit, lisday0) #([list with dates (str)], [list with OHLC data])
 
+def get_dayprices_2dates(stock_, date0, date1):
+    lisday0 = [] 
+    des = 2
+    # get ticker date & price data:
+    try:
+        data = yf.download(stock_, start=date0, end=date1, interval = '1d')
+        dates = data.index
+        date_list = dates.tolist()
+        dates_exit = [str(x)[:10] for x in date_list]
+        for b in range(0, len(data)):
+            valO = round(data.iloc[b][3], des)
+            valH = round(data.iloc[b][1], des)
+            valL = round(data.iloc[b][2], des)
+            valC = round(data.iloc[b][0], des)
+            lisday0.append((valO, valH, valL, valC))                
+    except:
+        print("no data available")
+
+    return(dates_exit, lisday0)     #([list with dates (str)], [list with OHLC data])
+
 def mov_average_series(lisday, per_ma, ndays_):
     lis_ma = []
     for b in range(0, ndays_):  # create MA(x)
@@ -81,3 +101,4 @@ def histogram(lisday, lisma, per00):   #(lis_day OHLC, list MA)
 
     return(full_histo_dat, full_histo, lis_dist, Cent100, Cent100_acum)
     #     (histo_data    ;histo_string; i, dist; parciales; acumulados)
+
